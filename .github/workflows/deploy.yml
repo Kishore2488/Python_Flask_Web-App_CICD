@@ -35,8 +35,8 @@ jobs:
       - name: Deploy to AWS S3
         if: success()
         run: |
-          aws s3 sync templates/ s3://krishna.k8s / --exclude "*" --include "*.html"
-          aws s3 sync static/ s3://krishna.k8s /static/
+          aws s3 sync / s3://krishna.k8s / --exclude "*" --include "*.html"
+          aws s3 sync / s3://krishna.k8s
 
       - name: Invalidate CloudFront Cache
         run: |
