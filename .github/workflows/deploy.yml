@@ -1,12 +1,12 @@
-name: Deploy Flask Web App
+name: Flask CI/CD
 
 on:
   push:
     branches:
-      - Master
+      - feature
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,20 +16,30 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: 3.11
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Deploy to EC2
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          script: |
-            cd ~/Python_Flask_Web-App_CICD
-            git pull origin Master
-            sudo systemctl restart flaskapp
+      - name: Lint Python code
+        run: |
+          pip install flake8
+          flake8 .
+
+      - name: Run tests
+        run: |
+          echo "Add your tests here"  # placeholder, add pytest later
+
+      - name: Deploy to AWS S3
+        if: success()
+        run: |
+          aws s3 sync templates/ s3://YOUR_BUCKET_NAME/ --exclude "*" --include "*.html"
+          aws s3 sync static/ s3://YOUR_BUCKET_NAME/static/
+
+      - name: Invalidate CloudFront Cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id YOUR_DISTRIBUTION_ID \
+            --paths "/*"
