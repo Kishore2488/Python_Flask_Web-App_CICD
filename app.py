@@ -1,20 +1,18 @@
-from flask import Flask, send_from_directory
-import os
+from flask import Flask, render_template
 
-app = Flask(__name__, static_folder='public')
+app = Flask(__name__)
 
-@app.route('/')
+@app.route("/")
 def home():
-    return send_from_directory('public', 'index.html')
+    return render_template("index.html")
 
-@app.route('/about')
+@app.route("/about")
 def about():
-    return send_from_directory('public', 'about.html')
+    return render_template("about.html")
 
-@app.route('/contact')
+@app.route("/contact")
 def contact():
-    return send_from_directory('public', 'contact.html')
+    return render_template("contact.html")
 
 if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(debug=True)
