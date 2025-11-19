@@ -35,11 +35,11 @@ jobs:
       - name: Deploy to AWS S3
         if: success()
         run: |
-          aws s3 sync templates/ s3://YOUR_BUCKET_NAME/ --exclude "*" --include "*.html"
-          aws s3 sync static/ s3://YOUR_BUCKET_NAME/static/
+          aws s3 sync templates/ s3://krishna.k8s / --exclude "*" --include "*.html"
+          aws s3 sync static/ s3://krishna.k8s /static/
 
       - name: Invalidate CloudFront Cache
         run: |
           aws cloudfront create-invalidation \
-            --distribution-id YOUR_DISTRIBUTION_ID \
+            --distribution-id EGODUWQL59STH \
             --paths "/*"
